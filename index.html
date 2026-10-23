@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#13786c"><meta name="description" content="用于线性代数学习的矩阵计算器，支持行、列最简形与精确分数，逐步解释每一次初等变换。">
+  <title>矩阵研习室 · 简化梯形阵计算器</title>
+  <link rel="stylesheet" href="style.css"><script src="math.js" defer></script><script src="app.js" defer></script>
+</head>
+<body>
+<header class="topbar"><a class="brand" href="./"><span class="logo">[m]</span><strong>矩阵研习室<span> / MATRIX LAB</span></strong></a><span class="top-note"><i></i> 让每一次变换都有迹可循</span><button class="icon-button" id="help-button" title="查看使用说明" aria-label="查看使用说明">?</button></header>
+<main>
+  <div class="intro"><div><div class="eyebrow">LINEAR ALGEBRA · 线性代数工具</div><h1>把矩阵，一步步化简。</h1><p>从原始矩阵到最简形，看懂每一次初等变换。</p></div><div class="intro-symbol" aria-hidden="true"><span>A</span><span class="symbol-arrow">→</span><span>[ I &nbsp; B ]</span></div></div>
+  <div class="workspace">
+    <section class="panel input-panel" aria-labelledby="input-heading">
+      <div class="section-header"><h2 id="input-heading"><span class="section-number">01</span> 设置你的矩阵</h2><span class="pill">输入</span></div>
+      <div class="field-label">简化方式</div>
+      <div class="mode-selector" role="group" aria-label="简化方式"><button id="row-mode" class="mode active" aria-pressed="true"><span class="mode-glyph">↔</span><span><b>行简化</b><small>初等行变换</small></span><i>✓</i></button><button id="column-mode" class="mode" aria-pressed="false"><span class="mode-glyph">↕</span><span><b>列简化</b><small>初等列变换</small></span><i>✓</i></button></div>
+      <p class="mode-description" id="mode-description">将主元化为 1，主元所在列的其余元素化为 0。</p>
+      <div class="dimensions"><label>行数 <input id="rows" type="number" min="1" max="10" step="1" value="3"></label><span>×</span><label>列数 <input id="cols" type="number" min="1" max="10" step="1" value="4"></label><button id="resize" class="button secondary small">更新矩阵</button></div>
+      <div class="matrix-label"><label for="cell-0-0" class="field-label">矩阵 A <span id="size-badge">3 × 4</span></label><button id="paste-toggle" class="text-button" aria-expanded="false" aria-controls="paste-panel">粘贴矩阵 ↗</button></div>
+      <div id="paste-panel" class="paste-panel" hidden><label for="paste-input">每行一行，元素用空格、逗号或制表符分隔</label><textarea id="paste-input" rows="4" placeholder="1 2 -1 3&#10;2 4 1 9&#10;-1 -2 2 0"></textarea><button id="paste-apply" class="button secondary small">填入矩阵</button></div>
+      <div class="input-matrix-scroll"><div class="matrix-input" id="matrix-input"></div></div>
+      <div class="input-hint">支持整数、小数与分数，如 <code>-2</code> <code>0.5</code> <code>1/3</code><br>矩阵尺寸：1–10 行、1–10 列</div>
+      <div id="error" role="alert" hidden></div>
+      <button id="calculate" class="button primary">开始简化 <span>→</span></button>
+      <div class="input-actions"><button class="text-button" id="example">载入示例</button><span>·</span><button class="text-button muted" id="clear">清空矩阵</button></div>
+      <div class="precision-note"><span>⅟₃</span><div><b>精确计算，不丢失细节</b><p>全程使用分数运算，保留每一步的准确值。</p></div></div>
+    </section>
+    <div class="output-column">
+      <section class="panel result-panel" aria-labelledby="result-heading"><div class="section-header"><h2 id="result-heading"><span class="section-number">02</span> 简化结果</h2><span id="result-status" class="status">示例结果</span></div><div id="result-content" aria-live="polite"></div><div class="result-footer"><span id="result-summary"></span><button id="copy" class="text-button">复制结果 ⧉</button></div></section>
+      <section class="panel process-panel" aria-labelledby="process-heading"><div class="section-header"><h2 id="process-heading"><span class="section-number">03</span> 变换过程</h2><span id="step-count" class="pill"></span></div><div class="process-toolbar"><div class="tabs" role="group" aria-label="过程展示方式"><button class="tab active" id="single-tab" aria-pressed="true">逐步推导</button><button class="tab" id="all-tab" aria-pressed="false">全部步骤</button></div><span class="legend"><i></i> 本步变换的行 / 列</span></div><div id="steps-content"></div><div class="player" id="player"><button id="prev" class="nav-button" aria-label="上一步">←</button><div class="progress-wrap"><label id="progress-label" for="progress">原始矩阵</label><input type="range" id="progress" min="0" max="1" value="0" aria-label="选择变换步骤"></div><button id="next" class="nav-button" aria-label="下一步">→</button></div></section>
+    </div>
+  </div>
+  <aside class="learning-note"><span class="note-icon">✦</span><div><b>学一点 · 什么是简化梯形阵？</b><p id="learning-text">行简化梯形阵（行最简形）中：零行位于底部；每个非零行的首个非零元素为 1；主元位置逐行右移；每个主元所在列的其他元素均为 0。</p></div><span class="note-decoration" aria-hidden="true">RREF</span></aside>
+  <footer><span>矩阵研习室</span><span>把计算交给工具，把理解留给自己。</span><span>精确分数 · 逐步推导</span></footer>
+</main>
+<dialog id="help"><div class="dialog-heading"><h2>开始你的矩阵练习</h2><button class="icon-button" id="close-help" aria-label="关闭说明">×</button></div><ol><li>选择行简化或列简化。</li><li>输入行数、列数，点击“更新矩阵”。</li><li>填写每个元素，或粘贴完整矩阵。</li><li>点击“开始简化”，查看结果和每一步变换。</li></ol><p>r 表示行，c 表示列；1/4r1 表示第 1 行乘以 1/4；r2+3×r1 表示第 2 行加上第 1 行的 3 倍；r1↔r2 表示交换第 1 行与第 2 行。</p><p>列最简形采用“转置 → 行最简形 → 转置”的定义，页面展示的是原矩阵上的初等列变换。</p><p>支持实有理数输入，不支持字母、复数或科学计数法。分数的分母不能为 0。使用 Tab 可逐格输入，Ctrl / ⌘ + Enter 可开始计算。</p><button id="help-done" class="button primary">明白了，开始练习 →</button></dialog>
+<div id="toast" role="status" hidden></div>
+</body></html>
